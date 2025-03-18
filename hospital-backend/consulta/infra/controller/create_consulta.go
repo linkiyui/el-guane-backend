@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -45,8 +46,9 @@ func CreateConsulta(ctx *gin.Context) {
 		Paciente_id: req.Paciente_id,
 		Grade:       domain.Grade(req.Grade),
 	}
+	// fmt.Println(consulta)
 
-	err = consulta_service.CreateConsulta(ctx, consulta)
+	id, err := consulta_service.CreateConsulta(ctx, consulta)
 	if err != nil {
 		ctx.AbortWithStatus(500)
 		return
@@ -54,7 +56,7 @@ func CreateConsulta(ctx *gin.Context) {
 
 	if req.Grade == string(domain.GradeHigh) {
 		grave := grave_domain.Grave{
-			Consulta_Id: consulta.ID,
+			Consulta_Id: id,
 			Sintomas:    req.Sintomas,
 			Ingreso:     req.Ingreso,
 			Temp:        req.Temp,
@@ -73,12 +75,16 @@ func CreateConsulta(ctx *gin.Context) {
 	}
 
 	if req.Grade == string(domain.GradeLow) {
+
 		leve := leve_domain.Leve{
-			Consulta_Id: consulta.ID,
+			Consulta_Id: id,
 			Diagnosis:   req.Diagnosis,
 			Analisis:    req.Analisis,
 		}
 
+		fmt.Print(leve.Consulta_Id)
+
+		fmt.Println(leve)
 		leve_service := di_container.LeveService()
 		err = leve_service.CreateLeve(ctx, leve)
 		if err != nil {

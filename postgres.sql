@@ -26,7 +26,7 @@ CREATE TABLE pacientes (
 );
 
 -- Tabla de consultas
-CREATE TABLE consultas (
+CREATE TABLE consulta (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     doctor_id UUID,
     date TIMESTAMP,
@@ -41,7 +41,7 @@ CREATE TABLE leves (
     consulta_id UUID PRIMARY KEY,
     diagnosis TEXT,
     analisis BOOLEAN,
-    CONSTRAINT fk_consulta FOREIGN KEY(consulta_id) REFERENCES consultas(id)
+    CONSTRAINT fk_consulta FOREIGN KEY(consulta_id) REFERENCES consulta(id)
 );
 
 -- Tabla de graves
@@ -53,5 +53,5 @@ CREATE TABLE graves (
     pulse FLOAT,
     press_min INT,
     press_max INT,
-    CONSTRAINT fk_consulta FOREIGN KEY(consulta_id) REFERENCES consultas(id)
+    CONSTRAINT fk_consulta FOREIGN KEY(consulta_id) REFERENCES consulta(id)
 );

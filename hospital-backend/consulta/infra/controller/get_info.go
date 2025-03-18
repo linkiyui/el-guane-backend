@@ -9,9 +9,12 @@ import (
 )
 
 func GetConsultaInfo(ctx *gin.Context) {
+
+	consulta_id := ctx.Query("consulta_id")
+
 	consulta_service := di_container.ConsultaService()
 
-	consulta, err := consulta_service.GetConsultaInfo(ctx)
+	consulta, err := consulta_service.GetConsultaInfo(ctx, consulta_id)
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
 		return

@@ -17,12 +17,12 @@ func NewConsultaPostgresRepository(repo *gorm.DB) *ConsultaPostgresRepository {
 	}
 }
 
-func (u *ConsultaPostgresRepository) CreateConsulta(ctx context.Context, consulta domain.Consulta) error {
+func (u *ConsultaPostgresRepository) CreateConsulta(ctx context.Context, consulta domain.Consulta) (string, error) {
 	err := u.db.Create(&consulta).Error
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return consulta.ID, nil
 }
 
 func (u *ConsultaPostgresRepository) FindByConsultaId(ctx context.Context, consulta_id string) (domain.Consulta, error) {
@@ -61,10 +61,10 @@ func (u *ConsultaPostgresRepository) GetAllConsultas(ctx context.Context) ([]dom
 	return consultas, nil
 }
 
-func (u *ConsultaPostgresRepository) GetConsultaInfo(ctx context.Context) (domain.Consulta, error) {
+func (u *ConsultaPostgresRepository) GetConsultaInfo(ctx context.Context, consulta_id string) (domain.Consulta, error) {
 
 	var consulta domain.Consulta
-	err := u.db.First(&consulta).Error
+	err := u.db.Where("id = ?", consulta_id).First(&consulta).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return domain.Consulta{}, nil

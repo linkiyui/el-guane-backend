@@ -8,7 +8,10 @@ import (
 )
 
 type IConsultaService interface {
-	CreateConsulta(ctx context.Context, consulta domain.Consulta) error
+	CreateConsulta(ctx context.Context, consulta domain.Consulta) (string, error)
+	GetConsultaInfo(ctx context.Context, consulta_id string) (domain.Consulta, error)
+	GetTotalConsultas(ctx context.Context) (int64, error)
+	GetAllConsultas(ctx context.Context) ([]domain.Consulta, error)
 }
 
 type ConsultaService struct {
@@ -21,10 +24,10 @@ func NewConsultaService(consulta_repo domain.IConsultaRepository) *ConsultaServi
 	}
 }
 
-func (s *ConsultaService) CreateConsulta(ctx context.Context, consulta domain.Consulta) error {
+func (s *ConsultaService) CreateConsulta(ctx context.Context, consulta domain.Consulta) (string, error) {
 	ID, err := utils.GenerateUUIDv7()
 	if err != nil {
-		return err
+		return "", err
 	}
 	con := domain.Consulta{
 		ID:          ID,
