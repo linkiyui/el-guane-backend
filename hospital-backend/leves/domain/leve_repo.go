@@ -13,4 +13,5 @@ type ILeveRepository interface {
 	GetAnalysisLeves(ctx context.Context) (int64, error)
 	GetOldestLevePatientWithDiagnosis(ctx context.Context, diagnosis string) (paciente_domain.Paciente, error)
 	GetLevesByDiagnosis(ctx context.Context, diagnosis string) ([]Leve_diagnosis, error)
+	GetLeveInfo(ctx context.Context, leve_id string) (LeveToDomain, error)
 }

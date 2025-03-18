@@ -44,3 +44,22 @@ func (u *GravePostgresRepository) GetGravesHighPressure(ctx context.Context) (in
 	}
 	return totalGraves, nil
 }
+
+func (u *GravePostgresRepository) GetGraveInfo(ctx context.Context, consulta_id string) (domain.GraveToDomain, error) {
+
+	var result domain.GraveToDomain
+	err := u.db.Table("graves").
+		Select("graves.*, consultas.*, doctors.name as doctor_name, pacientes.name as paciente_name, pacientes.age as paciente_age, pacientes.sex as paciente_sex").
+		Joins("JOIN consultas ON graves.consulta_id = consultas.id").
+		Joins("JOIN doctors ON consultas.doctor_id = doctors.id").
+		Joins("JOIN pacientes ON consultas.paciente_id = pacientes.id").
+		Where("graves.consulta_id = ?", consulta_id).
+		First(&result).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return domain.GraveToDomain{}, nil
+		}
+		return domain.GraveToDomain{}, err
+	}
+	return result, nil
+}

@@ -74,6 +74,9 @@ func registerRoutes(r *gin.Engine) {
 	consulta.GET("/garve", consulta_controllers.GetGrave)
 	consulta.GET("/high-pressure-percentage", consulta_controllers.GetHighPressurePercentage)
 	consulta.GET("/analysis-percentage", consulta_controllers.GetAnalysisPercentage)
+	consulta.GET("/all", consulta_controllers.GetAllConsultas)
+	consulta.GET("/", consulta_controllers.GetConsultaInfo)
+	consulta.GET("/grade", consulta_controllers.GetConsultaGrade)
 
 	leve := v1.Group("/leve").Use(auth_middlewares.VerifyLoginToken)
 	leve.GET("/oldest-leve-patient", leve_controllers.GetOldestLevePatientWithDiagnosis)

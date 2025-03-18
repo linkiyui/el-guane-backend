@@ -92,3 +92,22 @@ func (u *LevePostgresRepository) GetLevesByDiagnosis(ctx context.Context, diagno
 	}
 	return leves, nil
 }
+
+func (u *LevePostgresRepository) GetLeveInfo(ctx context.Context, leve_id string) (domain.LeveToDomain, error) {
+
+	var result domain.LeveToDomain
+	err := u.db.Table("leves").
+		Select("leves.*, consultas.*, doctors.name as doctor_name, pacientes.name as paciente_name, pacientes.age as paciente_age, pacientes.sex as paciente_sex").
+		Joins("JOIN consultas ON leves.consulta_id = consultas.id").
+		Joins("JOIN doctors ON consultas.doctor_id = doctors.id").
+		Joins("JOIN pacientes ON consultas.paciente_id = pacientes.id").
+		Where("leves.consulta_id = ?", leve_id).
+		First(&result).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return domain.LeveToDomain{}, nil
+		}
+		return domain.LeveToDomain{}, err
+	}
+	return result, nil
+}

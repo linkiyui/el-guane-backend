@@ -50,3 +50,29 @@ func (u *ConsultaPostgresRepository) GetTotalConsultas(ctx context.Context) (int
 	}
 	return totalConsultas, nil
 }
+
+func (u *ConsultaPostgresRepository) GetAllConsultas(ctx context.Context) ([]domain.Consulta, error) {
+
+	var consultas []domain.Consulta
+	err := u.db.Find(&consultas).Error
+	if err != nil {
+		return nil, err
+	}
+	return consultas, nil
+}
+
+func (u *ConsultaPostgresRepository) GetConsultaInfo(ctx context.Context) (domain.Consulta, error) {
+
+	var consulta domain.Consulta
+	err := u.db.First(&consulta).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return domain.Consulta{}, nil
+		}
+		return domain.Consulta{}, err
+	}
+	if consulta.ID == "" {
+		return domain.Consulta{}, nil
+	}
+	return consulta, nil
+}
