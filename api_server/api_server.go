@@ -62,6 +62,7 @@ func registerRoutes(r *gin.Engine) {
 	user := v1.Group("/user").Use(auth_middlewares.VerifyLoginToken)
 	user.GET("/rol", user_controllers.GetRole)
 	user.PUT("/change-password", user_controllers.ChangePassword)
+	user.GET("/info", user_controllers.GetMyInfo)
 
 	admin := v1.Group("/admin").Use(auth_middlewares.VerifyLoginToken, user_middlewares.VerifyAdmin)
 	admin.GET("/users", user_controllers.GetUsers)

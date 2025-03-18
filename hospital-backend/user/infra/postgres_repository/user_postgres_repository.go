@@ -95,3 +95,41 @@ func (u *UserPostgresRepository) Update(ctx context.Context, user domain.User) e
 	}
 	return nil
 }
+
+func (u *UserPostgresRepository) ChangePassword(ctx context.Context, user_id string, password string) error {
+
+	err := u.db.Model(&domain.User{}).Where("id = ?", user_id).Update("password", password).Error
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
+}
+
+func (u *UserPostgresRepository) GetUser(ctx context.Context, user_id string) (domain.User, error) {
+
+	var user domain.User
+	err := u.db.Where("id = ?", user_id).First(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return domain.User{}, domain_errors.ErrNotFound
+		}
+		fmt.Println(err)
+		return domain.User{}, err
+	}
+	return user, nil
+}
+
+func (u *UserPostgresRepository) GetMyInfo(ctx context.Context, user_id string) (domain.User, error) {
+
+	var user domain.User
+	err := u.db.Where("id = ?", user_id).First(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return domain.User{}, domain_errors.ErrNotFound
+		}
+		fmt.Println(err)
+		return domain.User{}, err
+	}
+	return user, nil
+}

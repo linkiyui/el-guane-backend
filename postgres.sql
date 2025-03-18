@@ -1,5 +1,7 @@
+-- Crear extensión para UUID
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Tabla de usuarios
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     ci VARCHAR(255) UNIQUE,
@@ -9,6 +11,21 @@ CREATE TABLE users (
     role VARCHAR(255)
 );
 
+-- Tabla de doctores
+CREATE TABLE doctors (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(255)
+);
+
+-- Tabla de pacientes
+CREATE TABLE pacientes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(255),
+    age INT,
+    sex VARCHAR(10)
+);
+
+-- Tabla de consultas
 CREATE TABLE consultas (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     doctor_id UUID,
@@ -19,18 +36,7 @@ CREATE TABLE consultas (
     CONSTRAINT fk_paciente FOREIGN KEY(paciente_id) REFERENCES pacientes(id)
 );
 
-CREATE TABLE doctors (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(255)
-);
-
-CREATE TABLE pacientes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(255),
-    age INT,
-    sex VARCHAR(10)
-);
-
+-- Tabla de leves
 CREATE TABLE leves (
     consulta_id UUID PRIMARY KEY,
     diagnosis TEXT,
@@ -38,6 +44,7 @@ CREATE TABLE leves (
     CONSTRAINT fk_consulta FOREIGN KEY(consulta_id) REFERENCES consultas(id)
 );
 
+-- Tabla de graves
 CREATE TABLE graves (
     consulta_id UUID PRIMARY KEY,
     sintomas TEXT,
